@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Secure Note App - Login & Register</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <header class="app-header">
+      <h1>🔒 Secure Note App</h1>
+      <p class="subtitle">End-to-end encrypted note application with SSO</p>
+    </header>
+
+    <!-- Main content area - switches between views -->
+    <main id="main-content">
+      
+      <!-- Login View -->
+      <div id="login-view" class="auth-view">
+        <div class="auth-card">
+          <h2>Login</h2>
+          <form id="login-form" class="auth-form">
+            <div class="form-group">
+              <label for="login-email">Email</label>
+              <input 
+                type="email" 
+                id="login-email" 
+                name="email" 
+                required 
+                autocomplete="email"
+                placeholder="your@email.com"
+              >
+            </div>
+            <div class="form-group">
+              <label for="login-password">Password</label>
+              <input 
+                type="password" 
+                id="login-password" 
+                name="password" 
+                required 
+                autocomplete="current-password"
+                placeholder="Enter your password"
+              >
+            </div>
+            <div class="error-message" id="login-error"></div>
+            <button type="submit" class="btn btn-primary" id="login-btn">
+              <span>Login</span>
+            </button>
+          </form>
+
+          <div class="divider">OR</div>
+
+          <button class="btn btn-google" id="google-login-btn">
+            <span>Sign in with Google</span>
+          </button>
+
+          <p class="auth-switch">
+            Don't have an account? 
+            <a href="#" id="show-register">Register here</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Register View -->
+      <div id="register-view" class="auth-view" style="display: none;">
+        <div class="auth-card">
+          <h2>Register</h2>
+          <form id="register-form" class="auth-form">
+            <div class="form-group">
+              <label for="register-username">Username</label>
+              <input 
+                type="text" 
+                id="register-username" 
+                name="username" 
+                required 
+                minlength="3"
+                maxlength="50"
+                autocomplete="username"
+                placeholder="Choose a username"
+              >
+            </div>
+            <div class="form-group">
+              <label for="register-email">Email</label>
+              <input 
+                type="email" 
+                id="register-email" 
+                name="email" 
+                required 
+                autocomplete="email"
+                placeholder="your@email.com"
+              >
+            </div>
+            <div class="form-group">
+              <label for="register-password">Password</label>
+              <input 
+                type="password" 
+                id="register-password" 
+                name="password" 
+                required 
+                minlength="8"
+                autocomplete="new-password"
+                placeholder="Min 8 characters, 1 uppercase, 1 number"
+              >
+            </div>
+            <div class="error-message" id="register-error"></div>
+            <button type="submit" class="btn btn-primary" id="register-btn">
+              <span>Register</span>
+            </button>
+          </form>
+
+          <div class="divider">OR</div>
+
+          <button class="btn btn-google" id="google-register-btn">
+            <span>Sign up with Google</span>
+          </button>
+
+          <p class="auth-switch">
+            Already have an account? 
+            <a href="#" id="show-login">Login here</a>
+          </p>
+        </div>
+      </div>
+
+      <!-- Note App View (shown after login) -->
+      <div id="app-view" style="display: none;">
+        <div class="app-container">
+          <div class="app-header-bar">
+            <div class="user-info">
+              <span id="user-greeting">Welcome!</span>
+            </div>
+            <button class="btn btn-secondary btn-small" id="logout-btn">Logout</button>
+          </div>
+
+          <div class="todo-section">
+            <h2>My Notes</h2>
+            <div id="task-counter" class="task-counter"></div>
+            
+            <!-- Add Note Form -->
+            <form id="todo-form" class="todo-form">
+              <div class="form-group">
+                <div style="display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-sm);">
+                  <button type="button" class="btn-hr" id="insert-hr-btn">
+                    ➖ Insert Horizontal Line
+                  </button>
+                </div>
+                <textarea 
+                  id="todo-content" 
+                  name="content" 
+                  rows="5" 
+                  placeholder="Enter your note... (Use --- on a new line to create a horizontal divider)"
+                  required
+                  maxlength="5000"
+                ></textarea>
+              </div>
+              <div class="error-message" id="todo-error"></div>
+              <button type="submit" class="btn btn-primary">
+                <span>Add Note</span>
+              </button>
+            </form>
+
+            <!-- Loading indicator -->
+            <div id="loading" class="loading" style="display: none;">
+              <div class="spinner"></div>
+              <p>Loading...</p>
+            </div>
+
+            <!-- Note List -->
+            <div id="todo-list" class="todo-list">
+              <!-- Notes will be inserted here -->
+            </div>
+
+            <!-- Clear Completed Button -->
+            <div class="clear-completed-container">
+              <button type="button" class="btn btn-secondary btn-small" id="clear-completed-btn" disabled>
+                Clear Completed
+              </button>
+            </div>
+
+            <!-- Empty state -->
+            <div id="empty-state" class="empty-state" style="display: none;">
+              <p>📝 No notes yet. Add your first note above!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <footer class="app-footer">
+      <p>🔐 Secured with AES-256-GCM encryption | SHA-256 integrity verification | JWT authentication</p>
+    </footer>
+  </div>
+
+  <!-- Modal for editing notes -->
+  <div id="edit-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Edit Note</h3>
+        <button class="close-btn" id="close-modal">&times;</button>
+      </div>
+      <form id="edit-form">
+        <div class="form-group">
+          <div style="display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-sm);">
+            <button type="button" class="btn-hr" id="insert-hr-edit-btn">
+              ➖ Insert Horizontal Line
+            </button>
+          </div>
+          <label for="edit-content">Content</label>
+          <textarea 
+            id="edit-content" 
+            name="content" 
+            rows="6" 
+            required
+            maxlength="5000"
+            placeholder="Use --- on a new line to create a horizontal divider"
+          ></textarea>
+        </div>
+        <div class="error-message" id="edit-error"></div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancel-edit">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
